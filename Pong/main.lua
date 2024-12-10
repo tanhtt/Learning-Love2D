@@ -15,6 +15,13 @@ VIRTUAL_HEIGHT = 234
 
 PADDLE_SPEED = 200
 
+sounds = {
+    ['hit-paddle'] = love.audio.newSource("sounds/sounds_paddle_hit.wav", "static"),
+    ['score'] = love.audio.newSource("sounds/sounds_score.wav", "static"),
+    ['hit-wall'] = love.audio.newSource("sounds/sounds_wall_hit.wav", "static")
+
+}
+
 function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
@@ -104,6 +111,8 @@ function love.update(dt)
             else
                 ball.dy = math.random(10, 150)
             end
+
+            sounds['hit-paddle']:play()
         end
 
         if ball:collides(player2) then
@@ -115,16 +124,21 @@ function love.update(dt)
             else
                 ball.dy = math.random(10, 150)
             end
+            sounds['hit-paddle']:play()
         end
 
         if ball.y <= 0 then
             ball.y = 0
             ball.dy = -ball.dy
+
+            sounds['hit-wall']:play()
         end
 
         if ball.y >= VIRTUAL_HEIGHT - 4 then
             ball.y = VIRTUAL_HEIGHT - 4
             ball.dy = - ball.dy
+
+            sounds['hit-wall']:play()
         end
 
     elseif gameState == 'done' then
@@ -134,6 +148,8 @@ function love.update(dt)
     if ball.x < 0 then
         servingPlayer = 1
         player2Score = player2Score + 1
+
+        sounds['score']:play()
         if player2Score >= 3 then
             gameState = 'done'
             winningPlayer = 2
@@ -146,6 +162,8 @@ function love.update(dt)
     if ball.x > VIRTUAL_WIDTH then
         servingPlayer = 2
         player1Score = player1Score + 1
+
+        sounds['score']:play()
         if player1Score >= 3 then
             gameState = 'done'
             winningPlayer = 1
